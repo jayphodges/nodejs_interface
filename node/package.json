@@ -1,0 +1,29 @@
+{
+  "name": "nodeinterface",
+  "version": "1.0.0",
+  "description": "Frontend to Ruby API",
+  "main": "index.js",
+  "author": "Jay P Hodges",
+  "license": "ISC",
+  "scripts": {
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "build": "./node_modules/webpack/bin/webpack.js",
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-preset-env": "^1.6.0",
+    "jquery": "^3.2.1",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "dependencies": {
+    "chart.js": "^2.7.1",
+    "cors": "^2.8.4",
+    "css-loader": "^0.28.8",
+    "express": "^4.16.2",
+    "style-loader": "^0.19.1"
+  }
+}
