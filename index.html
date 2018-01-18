@@ -6,21 +6,95 @@
   <title>Ruby Goldberg Machine</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <link rel="stylesheet" href="lib/styles/styles.css">
+  <title>Ruby Goldberg</title>
 </head>
 
 <body>
-  <h1>Ruby Goldberg Machine</h1>
-  <h3>Search by Name</h3>
-    <input type="text" class="name_search" name="search-by-name">
-    <button id="name">Submit</button>
-  <!-- <h3>Search by Year</h3>
-    <input type="text" class="year_input" name="search-by-year"> -->
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-item">
+            <a><h4>National Database</h4> <span class="sr-only">(current)</span></a>
+          </li>
+          <div class="container">
+            <div class="form-group">
+              <input type="name" class="form-control" id="nationalName" placeholder="Enter Name">
+            </div>
+            <div class="form-group">
+              <input type="name" class="form-control" id="nationalYear" placeholder="Enter year 2000-2014">
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="nationalRadios" id="nationalRadios1" value="option1" checked>
+            Name popularity by year
+            </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="nationalRadios" id="nationalRadios2" value="option2">
+            Most Popular name in a year
+            </label>
+              <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="nationalRadios" id="nationalRadios3" value="option3">
+            Year name was most popular
+            </label>
+            </div>
+            <button type="submit" class="btn btn-primary" id="national">Submit</button>
+          </div>
+        </ul>
+
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-item">
+            <a><h4>State Database</h4><span class="sr-only">(current)</span></a>
+          </li>
+          <div class="container">
+            <div class="form-group">
+              <input type="name" class="form-control" id="stateName" placeholder="Enter Name">
+            </div>
+            <div class="form-group">
+              <input type="name" class="form-control" id="stateYear" placeholder="Enter year 2000-2014">
+            </div>
+            <div class="form-group">
+              <input type="name" class="form-control" id="stateName" placeholder="Enter 2 letter state abbreviation">
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="stateRadios" id="stateRadios1" value="option4" checked>
+          States name was most popular and what years
+          </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="stateRadios" id="stateRadios2" value="option5">
+          Name popularity by state
+          </label>
+            </div>
+            <button type="submit" class="btn btn-primary" id="state">Submit</button>
+          </div>
+    </div>
+  </div>
+  </ul>
+
+  </nav>
+
+  <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3" id="results">
+    <canvas id="myChart" width="400" height="200"></canvas>
+  </main>
+
+</body>
+
+
+
+
+
+
+
 
 
   <script src="main.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-  <div>
-  <canvas id="myChart" width="400" height="200"></canvas>
-  </div>
 </body>
 </html>
