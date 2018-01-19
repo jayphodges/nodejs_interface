@@ -46,7 +46,7 @@
 
 	__webpack_require__(1);
 	__webpack_require__(6);
-	__webpack_require__(8);
+	__webpack_require__(9);
 
 /***/ }),
 /* 1 */
@@ -647,16 +647,30 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	const $ = __webpack_require__(7);
-	const url = 'http://localhost:3000/api/v1/';
+	const responses = __webpack_require__(8);
 
-	const getResponse = path => {
-	  $.get(url + path, { method: 'GET' }).then(response => console.log(response)).catch(error => {
+	const getGraph = path => {
+	  $.get(path, { method: 'GET' }).then(response => responses.drawGraph(response)).catch(error => {
+	    console.log({ error });
+	  });
+	};
+
+	const getTable = (path, id1, id2) => {
+	  $.get(path, { method: 'GET' }).then(response => responses.drawTable(response, id1, id2)).catch(error => {
+	    console.log({ error });
+	  });
+	};
+
+	const getStateTable = path => {
+	  $.get(path, { method: 'GET' }).then(response => responses.drawStateTable(response)).catch(error => {
 	    console.log({ error });
 	  });
 	};
 
 	module.exports = {
-	  getResponse
+	  getGraph,
+	  getTable,
+	  getStateTable
 	};
 
 /***/ }),
@@ -10920,30 +10934,24 @@
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-	const $ = __webpack_require__(7);
-	const response = __webpack_require__(9);
-	const request = __webpack_require__(9);
-	const url = 'http://107.170.199.192:8080/api/v1/';
-
-	const drawGraph = (male, female) => {
+	
+	const drawGraph = response => {
 	  $("#results").append(`<canvas id="myChart" width="400" height="200"></canvas>`);
 	  const ctx = document.getElementById("myChart");
-	  console.log(male);
-	  console.log(female);
 	  const years = [2000, 2001, 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
 	  const myChart = new Chart(ctx, {
 	    type: 'line',
 	    data: {
 	      labels: years,
 	      datasets: [{
-	        data: male,
+	        data: response.male,
 	        label: "Male",
 	        borderColor: "#3e95cd",
 	        fill: false
 	      }, {
-	        data: female,
+	        data: response.female,
 	        label: "Female",
 	        borderColor: "#f45342",
 	        fill: false
@@ -10953,7 +10961,6 @@
 	};
 
 	const drawStateTable = response => {
-	  console.log(response);
 	  $("#results").append(`
 	    <table class="table table-bordered" >
 	      <thead>
@@ -11007,6 +11014,21 @@
 	  });
 	};
 
+	module.exports = {
+	  drawGraph,
+	  drawStateTable,
+	  drawTable
+	};
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	const $ = __webpack_require__(7);
+	const response = __webpack_require__(8);
+	const request = __webpack_require__(6);
+	const url = 'http://107.170.199.192:8080/api/v1/';
+
 	$(document).ready(function () {
 
 	  $(":button").on('click', function (event) {
@@ -11014,41 +11036,21 @@
 	    const selection = $(`input[name=${db}Radios]:checked`).val();
 	    const name = $(`#${db}Name`).val();
 	    const year = $(`#${db}Year`).val();
-	    const state = $(`#stateId`).val();
+	    const state = $(`#stateId`).val().toUpperCase();
 	    $("#results").empty();
 	    if (selection === "option1") {
-	      // name popularity by year
-	      $.get(url + "name/" + name, { method: 'GET' }).then(response => drawGraph(response.male, response.female)).catch(error => {
-	        console.log({ error });
-	      });
+	      request.getGraph(url + "name/" + name);
 	    } else if (selection === "option2") {
-	      // Most popular name in a year
-	      $.get(url + "year/" + name, { method: 'GET' }).then(response => drawTable(response, "Year", "Count")).catch(error => {
-	        console.log({ error });
-	      });
+	      request.getTable(url + "year/" + name, "Year", "Count");
 	    } else if (selection === "option3") {
-	      // Year name was most popular
-	      $.get(url + "/name/year/" + year, { method: 'GET' }).then(response => drawTable(response, "Name", "Count")).catch(error => {
-	        console.log({ error });
-	      });
+	      request.getTable(url + "/name/year/" + year, "Name", "Count");
 	    } else if (selection === "option4") {
-	      // State Graph
-	      $.get(url + state + "/most/" + name, { method: 'GET' }).then(response => drawStateTable(response)).catch(error => {
-	        console.log({ error });
-	      });
+	      request.getStateTable(url + state + "/most/" + name);
 	    } else if (selection === "option5") {
-	      $.get(url + state + "/name/" + name, { method: 'GET' }).then(response => drawGraph(response.male, response.female)).catch(error => {
-	        console.log({ error });
-	      });
+	      request.getGraph(url + state + "/name/" + name);
 	    }
 	  });
 	});
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-	
 
 /***/ })
 /******/ ]);
