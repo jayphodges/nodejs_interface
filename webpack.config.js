@@ -17,5 +17,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['', '.js', '.json', '.css']
+  },
+  devServer: {
+  contentBase: '.',
+  host: '0.0.0.0',
+  port: 3000,
+  disableHostCheck: true
   }
 };
