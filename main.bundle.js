@@ -88,7 +88,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, ".sidebar {\n  position: fixed;\n  top: 0px;\n  bottom: 0;\n  left: 0;\n  z-index: 1000;\n  padding: 10px 5px;\n  overflow-x: hidden;\n  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */\n  border-right: 1px solid #eee;\n}\n\nh4 {\n  font-size: 20px;\n  padding: 10px 20px;\n  background-color: grey;\n}\n\n.sidebar .nav {\n  margin-bottom: 20px;\n}\n\n/* .sidebar .nav-item {\n  width: 100%;\n} */\n\n/* .sidebar .nav-item + .nav-item {\n  margin-left: 0;\n} */\n\n/* .sidebar .nav-link {\n  border-radius: 0;\n} */\n", ""]);
 
 	// exports
 
@@ -10925,12 +10925,14 @@
 	const $ = __webpack_require__(7);
 	const response = __webpack_require__(9);
 	const request = __webpack_require__(9);
-	const url = 'http://165.227.48.218:8080/api/v1/name/';
+	const url = 'http://107.170.199.192:8080/api/v1/';
 
 	const drawGraph = (male, female) => {
+	  $("#results").append(`<canvas id="myChart" width="400" height="200"></canvas>`);
 	  const ctx = document.getElementById("myChart");
-	  var years = [2000, 2001, 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
-	  var africa = [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478];
+	  console.log(male);
+	  console.log(female);
+	  const years = [2000, 2001, 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014];
 	  const myChart = new Chart(ctx, {
 	    type: 'line',
 	    data: {
@@ -10950,16 +10952,94 @@
 	  });
 	};
 
+	const drawStateTable = response => {
+	  console.log(response);
+	  $("#results").append(`
+	    <table class="table table-bordered" >
+	      <thead>
+	        <tr>
+	          <th scope="col">ID</th>
+	          <th scope="col">Year</th>
+	          <th scope="col">State</th>
+	          <th scope="col">Count</th>
+	        </tr>
+	      </thead>
+	      <tbody id="resultsTable">
+	      </tbody>
+	    </table>
+	    `);
+	  let i = 0;
+	  const table = $("#resultsTable");
+	  response.forEach(result => {
+	    i++;
+	    table.append(`
+	        <tr><th scope="row">${i}</th>
+	          <td>${result[2]}</td>
+	          <td>${result[1]}</td>
+	          <td>${result[0]}</td></tr>
+	        `);
+	  });
+	};
+
+	const drawTable = (response, id1, id2) => {
+	  $("#results").append(`
+	    <table class="table table-bordered" >
+	      <thead>
+	        <tr>
+	          <th scope="col">#</th>
+	          <th scope="col">${id1}</th>
+	          <th scope="col">${id2}</th>
+	        </tr>
+	      </thead>
+	      <tbody id="resultsTable">
+	      </tbody>
+	    </table>
+	    `);
+	  let i = 0;
+	  const table = $("#resultsTable");
+	  response.forEach(result => {
+	    i++;
+	    table.append(`
+	        <tr><th scope="row">${i}</th>
+	          <td>${result[0]}</td>
+	          <td>${result[1]}</td></tr>
+	        `);
+	  });
+	};
+
 	$(document).ready(function () {
 
 	  $(":button").on('click', function (event) {
-	    if (this.id == "name") {
-	      const name = $('.name_search').val();
-	      $.get(url + name, { method: 'GET' }).then(response => drawGraph(response.male, response.female)).catch(error => {
+	    const db = this.id;
+	    const selection = $(`input[name=${db}Radios]:checked`).val();
+	    const name = $(`#${db}Name`).val();
+	    const year = $(`#${db}Year`).val();
+	    const state = $(`#stateId`).val();
+	    $("#results").empty();
+	    if (selection === "option1") {
+	      // name popularity by year
+	      $.get(url + "name/" + name, { method: 'GET' }).then(response => drawGraph(response.male, response.female)).catch(error => {
 	        console.log({ error });
 	      });
-	    } else {
-	      console.log("year worked");
+	    } else if (selection === "option2") {
+	      // Most popular name in a year
+	      $.get(url + "year/" + name, { method: 'GET' }).then(response => drawTable(response, "Year", "Count")).catch(error => {
+	        console.log({ error });
+	      });
+	    } else if (selection === "option3") {
+	      // Year name was most popular
+	      $.get(url + "/name/year/" + year, { method: 'GET' }).then(response => drawTable(response, "Name", "Count")).catch(error => {
+	        console.log({ error });
+	      });
+	    } else if (selection === "option4") {
+	      // State Graph
+	      $.get(url + state + "/most/" + name, { method: 'GET' }).then(response => drawStateTable(response)).catch(error => {
+	        console.log({ error });
+	      });
+	    } else if (selection === "option5") {
+	      $.get(url + state + "/name/" + name, { method: 'GET' }).then(response => drawGraph(response.male, response.female)).catch(error => {
+	        console.log({ error });
+	      });
 	    }
 	  });
 	});
